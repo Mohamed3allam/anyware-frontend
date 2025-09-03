@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
 import DashboardPage from './pages/Dashboard/Dashboard';
@@ -12,6 +12,8 @@ import DashboardLayout from './layouts/DashboardLayout';
 export default function AppRoutes() {
   return (
     <Routes>
+      <Route path="/" element={<Navigate to="/dashboard" replace />} />
+      
       <Route element={<RequireGuestRoute />}>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
