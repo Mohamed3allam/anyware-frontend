@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -8,14 +8,16 @@ import {
   InputBase,
   Avatar,
   Badge,
-  Paper
+  Paper,
+  Menu,
+  MenuItem
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
-import { logout } from '../../features/auth/authSlice';
+import { logout } from '../../store/authSlice';
 import { useNavigate } from 'react-router-dom';
 import { setToken } from '../../api/apiClient';
 
@@ -28,16 +30,37 @@ export default function Header({ onMobileMenuOpen }: Props) {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
+  // State for menu
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
   const handleLogout = () => {
     dispatch(logout());
     setToken(null);
     localStorage.removeItem('token');
+    handleMenuClose();
     navigate('/login', { replace: true });
   };
 
   return (
     <AppBar position="sticky" color="transparent" sx={{ boxShadow: 'none', bgcolor: 'background.paper' }}>
-      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'column', gap: { xs: 1, md: 0 }, py: { xs: 1, md: 0 } }}>
+      <Toolbar
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          flexDirection: 'column',
+          gap: { xs: 1, md: 0 },
+          py: { xs: 1, md: 0 }
+        }}
+      >
         {/* Top row: menu button (mobile) + welcome (hidden on mobile) + icons */}
         <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 2 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
@@ -47,7 +70,7 @@ export default function Header({ onMobileMenuOpen }: Props) {
               aria-label="open drawer"
               edge="start"
               onClick={onMobileMenuOpen}
-              sx={{ display: { md: 'none' } }} // only visible on mobile
+              sx={{ display: { md: 'none' } }}
             >
               <MenuIcon />
             </IconButton>
@@ -78,9 +101,20 @@ export default function Header({ onMobileMenuOpen }: Props) {
               </Badge>
             </IconButton>
 
-            <IconButton onClick={handleLogout}>
+            {/* Avatar with menu */}
+            <IconButton onClick={handleMenuOpen}>
               <Avatar alt={name} src="" />
             </IconButton>
+
+            <Menu
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleMenuClose}
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+              transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+            >
+              <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            </Menu>
           </Box>
         </Box>
 

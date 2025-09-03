@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Paper, Typography, Box, IconButton, List, ListItem, ListItemText, ListItemSecondaryAction, Divider } from '@mui/material';
+import { Grid, Paper, Typography, Box, IconButton, List, ListItem, ListItemText, ListItemSecondaryAction, Divider } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
-import { fetchQuizzes, deleteQuiz } from '../../features/quizzes/quizzesSlice';
+import { fetchQuizzes, deleteQuiz, createQuiz, updateQuiz } from '../../store/quizzesSlice';
 import QuizFormDialog from '../../components/Quizzes/QuizFormDialog';
-import { Quiz } from '../../features/quizzes/quizzesSlice';
+import { Quiz } from '../../store/quizzesSlice';
 
 export default function QuizzesPage() {
   const dispatch = useAppDispatch();
@@ -18,12 +18,12 @@ export default function QuizzesPage() {
     dispatch(fetchQuizzes());
   }, [dispatch]);
 
-  const handleCreate = () => {
+  const handleOpenCreate = () => {
     setEditing(null);
     setDialogOpen(true);
   };
 
-  const handleEdit = (q: Quiz) => {
+  const handleOpenEdit = (q: Quiz) => {
     setEditing(q);
     setDialogOpen(true);
   };
@@ -34,23 +34,35 @@ export default function QuizzesPage() {
     await dispatch(deleteQuiz(id)).unwrap();
   };
 
+  const handleSubmit = async (data: Quiz) => {
+    if (editing?._id) {
+      await dispatch(updateQuiz({ id: editing._id, ...data })).unwrap();
+    } else {
+      await dispatch(createQuiz(data)).unwrap();
+    }
+    setDialogOpen(false);
+  };
+
   return (
-    <Container maxWidth="lg" sx={{ mt: 3 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+    <Grid container maxWidth="lg" sx={{ mt: 3 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, width: '100%' }}>
         <Typography variant="h5">Quizzes</Typography>
-        <IconButton onClick={handleCreate}><AddIcon /></IconButton>
+        <IconButton onClick={handleOpenCreate}><AddIcon /></IconButton>
       </Box>
 
-      <Paper sx={{ p: 2 }}>
+      <Paper sx={{ p: 2, width: '100%' }}>
         {status === 'loading' && <Typography>Loading...</Typography>}
         {!list.length && <Typography>No quizzes yet.</Typography>}
         <List>
           {list.map(q => (
-            <React.Fragment key={q._id ?? q.title}>
+            <React.Fragment key={q._id ?? q.name}>
               <ListItem>
-                <ListItemText primary={q.title} secondary={q.description} />
+                <ListItemText 
+                  primary={q.name} 
+                  secondary={`${q.course || ''} - ${q.semester || ''}`} 
+                />
                 <ListItemSecondaryAction>
-                  <IconButton onClick={() => handleEdit(q)} edge="end"><EditIcon /></IconButton>
+                  <IconButton onClick={() => handleOpenEdit(q)} edge="end"><EditIcon /></IconButton>
                   <IconButton onClick={() => handleDelete(q._id)} edge="end"><DeleteIcon /></IconButton>
                 </ListItemSecondaryAction>
               </ListItem>
@@ -60,7 +72,12 @@ export default function QuizzesPage() {
         </List>
       </Paper>
 
-      <QuizFormDialog open={dialogOpen} onClose={() => setDialogOpen(false)} initial={editing} />
-    </Container>
+      <QuizFormDialog 
+        open={dialogOpen} 
+        onClose={() => setDialogOpen(false)} 
+        onSubmit={handleSubmit} 
+        initial={editing || undefined} 
+      />
+    </Grid>
   );
 }

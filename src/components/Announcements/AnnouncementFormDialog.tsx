@@ -1,15 +1,8 @@
 import React, { useEffect } from 'react';
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  TextField
-} from '@mui/material';
-import { useForm } from 'react-hook-form';
-import { Announcement, createAnnouncement, updateAnnouncement } from '../../features/announcements/announcementsSlice';
-import { useAppDispatch } from '../../store/hooks';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Grid } from '@mui/material';
+import { useForm, Controller } from 'react-hook-form';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { Announcement, createAnnouncement, updateAnnouncement } from '../../store/announcementsSlice';
 
 type Props = {
   open: boolean;
@@ -17,23 +10,52 @@ type Props = {
   initial?: Announcement | null;
 };
 
-type Form = { title: string; body: string; author?: string };
+type Form = {
+  title: string;
+  description: string;
+  course?: string;
+  semester?: string;
+};
 
 export default function AnnouncementFormDialog({ open, onClose, initial }: Props) {
-  const { register, handleSubmit, reset } = useForm<Form>();
   const dispatch = useAppDispatch();
+  const { user } = useAppSelector(s => s.auth); // get current user ID
+
+  const { control, handleSubmit, reset } = useForm<Form>({
+    defaultValues: {
+      title: '',
+      description: '',
+      course: '',
+      semester: ''
+    }
+  });
 
   useEffect(() => {
-    reset(initial ?? { title: '', body: '', author: '' });
+    if (initial) {
+      reset({
+        title: initial.title || '',
+        description: initial.description || '',
+        course: initial.course || '',
+        semester: initial.semester || ''
+      });
+    } else {
+      reset({ title: '', description: '', course: '', semester: '' });
+    }
   }, [initial, reset]);
 
   const onSubmit = async (data: Form) => {
     try {
-      if (initial && initial._id) {
-        await dispatch(updateAnnouncement({ ...data, id: initial._id } as any)).unwrap();
+      const payload = {
+        ...data,
+        user: user?._id
+      };
+
+      if (initial?._id) {
+        await dispatch(updateAnnouncement({ ...payload, id: initial._id } as any)).unwrap();
       } else {
-        await dispatch(createAnnouncement({ ...data, date: new Date().toISOString() } as any)).unwrap();
+        await dispatch(createAnnouncement(payload as any)).unwrap();
       }
+
       onClose();
     } catch (err) {
       console.error(err);
@@ -41,16 +63,46 @@ export default function AnnouncementFormDialog({ open, onClose, initial }: Props
   };
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth>
-      <DialogTitle>{initial ? 'Edit announcement' : 'Create announcement'}</DialogTitle>
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+      <DialogTitle>{initial ? 'Edit Announcement' : 'Create Announcement'}</DialogTitle>
       <DialogContent>
-        <TextField fullWidth label="Title" margin="normal" {...register('title')} />
-        <TextField fullWidth label="Author" margin="normal" {...register('author')} />
-        <TextField fullWidth label="Body" margin="normal" multiline rows={4} {...register('body')} />
+        <Grid container spacing={2}>
+          <Grid size={12}>
+            <Controller
+              name="title"
+              control={control}
+              render={({ field }) => <TextField {...field} label="Title" fullWidth margin="dense" />}
+            />
+          </Grid>
+          <Grid size={12}>
+            <Controller
+              name="description"
+              control={control}
+              render={({ field }) => <TextField {...field} label="Description" fullWidth multiline rows={4} margin="dense" />}
+            />
+          </Grid>
+          <Grid size={{xs:12,md:6}}>
+            <Controller
+              name="course"
+              control={control}
+              render={({ field }) => <TextField {...field} label="Course" fullWidth margin="dense" />}
+            />
+          </Grid>
+          <Grid size={{xs:12,md:6}}>
+            <Controller
+              name="semester"
+              control={control}
+              render={({ field }) => <TextField {...field} label="Semester" fullWidth margin="dense" />}
+            />
+          </Grid>
+        </Grid>
       </DialogContent>
+
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={handleSubmit(onSubmit)} variant="contained">{initial ? 'Save' : 'Create'}</Button>
+        <Button variant="contained" onClick={handleSubmit(onSubmit)}>
+          {initial ? 'Save' : 'Create'}
+        </Button>
       </DialogActions>
     </Dialog>
   );

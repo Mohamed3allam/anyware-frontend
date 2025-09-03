@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Paper, Typography, Box, IconButton, List, ListItem, ListItemText, ListItemSecondaryAction, Divider } from '@mui/material';
+import { Grid, Box, Paper, Typography, IconButton, List, ListItem, ListItemText, ListItemSecondaryAction, Divider } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import AddIcon from '@mui/icons-material/Add';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { fetchAnnouncements, deleteAnnouncement, Announcement } from '../../features/announcements/announcementsSlice';
+import { fetchAnnouncements, deleteAnnouncement, Announcement } from '../../store/announcementsSlice';
 import AnnouncementFormDialog from '../../components/Announcements/AnnouncementFormDialog';
 
 export default function AnnouncementsPage() {
@@ -34,20 +34,20 @@ export default function AnnouncementsPage() {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 3 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+    <Grid container maxWidth="lg" sx={{ mt: 3 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, width: '100%' }}>
         <Typography variant="h5">Announcements</Typography>
         <IconButton onClick={handleCreate}><AddIcon /></IconButton>
       </Box>
 
-      <Paper sx={{ p: 2 }}>
+      <Paper sx={{ p: 2, width: '100%' }}>
         {status === 'loading' && <Typography>Loading...</Typography>}
         {!list.length && <Typography>No announcements yet.</Typography>}
         <List>
           {list.map(a => (
             <React.Fragment key={a._id ?? a.title}>
               <ListItem>
-                <ListItemText primary={a.title} secondary={a.body} />
+                <ListItemText primary={a.title} secondary={`${a.user || ''} - ${a.description}`} />
                 <ListItemSecondaryAction>
                   <IconButton onClick={() => handleEdit(a)} edge="end"><EditIcon /></IconButton>
                   <IconButton onClick={() => handleDelete(a._id)} edge="end"><DeleteIcon /></IconButton>
@@ -59,7 +59,11 @@ export default function AnnouncementsPage() {
         </List>
       </Paper>
 
-      <AnnouncementFormDialog open={dialogOpen} onClose={() => setDialogOpen(false)} initial={editing} />
-    </Container>
+      <AnnouncementFormDialog
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        initial={editing}
+      />
+    </Grid>
   );
 }

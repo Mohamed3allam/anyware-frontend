@@ -1,6 +1,6 @@
 import React from 'react';
 import { ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
 
 type Props = {
   to: string;
@@ -9,23 +9,35 @@ type Props = {
 };
 
 export default function SidebarItem({ to, label, icon }: Props) {
+  const location = useLocation();
+
+  // active detection, supports hash links
+  const isActive = (() => {
+    const [path, hash] = to.split('#');
+    return location.pathname === path && location.hash === (hash ? `#${hash}` : '');
+  })();
+
   return (
     <ListItemButton
       component={RouterLink}
       to={to}
+      selected={isActive}
       sx={{
         px: 3,
         py: 1.2,
+        color: 'white',
+        mb: 0.5,
+        borderRadius: 1,
         '&:hover': {
-          // literal spec: both bg and text become white (this makes label invisible).
-          // It's implemented to meet spec; consider the commented alternative for real UX.
-          backgroundColor: 'white',
-          color: 'white'
-          // alternative: backgroundColor: 'primary.main', color: 'white'
+          bgcolor: 'rgba(255,255,255,0.1)'
+        },
+        '&.Mui-selected': {
+          bgcolor: 'rgba(255,255,255,0.2)',
+          fontWeight: 600
         }
       }}
     >
-      {icon && <ListItemIcon sx={{ minWidth: 40 }}>{icon}</ListItemIcon>}
+      {icon && <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>{icon}</ListItemIcon>}
       <ListItemText primary={label} />
     </ListItemButton>
   );

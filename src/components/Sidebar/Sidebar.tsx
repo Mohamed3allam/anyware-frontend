@@ -33,7 +33,7 @@ function SidebarContent() {
 
       <List sx={{ flex: 1 }}>
         <SidebarItem to="/dashboard" label="Dashboard" icon={<HomeIcon />} />
-        <SidebarItem to="/announcements" label="Announcement" icon={<AnnouncementIcon />} />
+        <SidebarItem to="/announcements" label="Announcements" icon={<AnnouncementIcon />} />
         <SidebarItem to="/quizzes" label="Quizzes" icon={<QuizIcon />} />
       </List>
 

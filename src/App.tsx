@@ -8,7 +8,7 @@ import { store } from './store';
 import theme from './styles/theme';
 import I18nProvider from './i18n/intl';
 import AppRoutes from './routes';
-import { fetchCurrentUser } from './features/auth/authSlice';
+import { fetchCurrentUser } from './store/authSlice';
 
 /** Minimal Error Boundary */
 class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean }> {

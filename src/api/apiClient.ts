@@ -6,15 +6,12 @@ export function setToken(token: string | null) {
   _token = token;
 }
 
-function buildHeaders(custom?: Record<string, string>) {
-  const headers: Record<string, string> = {
+function buildHeaders() {
+  const token = localStorage.getItem('token');
+  return {
     'Content-Type': 'application/json',
-    ...custom
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
   };
-  if (_token) {
-    headers['Authorization'] = `Bearer ${_token}`;
-  }
-  return headers;
 }
 
 async function handleRes(res: Response) {
@@ -40,6 +37,14 @@ export function apiGet<T>(path: string): Promise<T> {
     headers: buildHeaders()
   }).then(handleRes);
 }
+
+export function apiUpload<T>(path: string, formData: FormData): Promise<T> {
+  return fetch(`${API_BASE}${path}`, {
+    method: 'POST',
+    body: formData // don't stringify, no headers!
+  }).then(handleRes);
+}
+
 
 export function apiPost<T>(path: string, body?: any): Promise<T> {
   return fetch(`${API_BASE}${path}`, {
