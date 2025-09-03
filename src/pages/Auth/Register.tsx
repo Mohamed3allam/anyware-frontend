@@ -156,12 +156,6 @@ export default function Register() {
             Sign In Instead
           </Button>
         </Box>
-        
-        {/* <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 2 }}>
-          By creating an account, you agree to our{' '}
-          <Link href="#" underline="hover">Terms of Service</Link> and{' '}
-          <Link href="#" underline="hover">Privacy Policy</Link>
-        </Typography> */}
       </Paper>
     </Container>
   );

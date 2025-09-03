@@ -20,11 +20,9 @@ export default function Login() {
   const onSubmit = async (data: Form) => {
     try {
       const res = await dispatch(loginUser(data)).unwrap();
-      // token handling / localStorage can be added here
       navigate('/dashboard');
     } catch (err) {
       console.error(err);
-      // show toast/snackbar in real app
     }
   };
 
