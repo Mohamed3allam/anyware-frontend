@@ -21,12 +21,11 @@ type State = {
 
 const initialState: State = { list: [], status: 'idle', error: null };
 
-// -------------------- Thunks --------------------
 export const fetchAnnouncements = createAsyncThunk(
   'announcements/fetch',
   async () => {
     const res = await apiGet<ISuccessResponse<Announcement[]>>('/announcements');
-    return res.data; // unwrap the data array
+    return res.data;
   }
 );
 
@@ -34,7 +33,7 @@ export const createAnnouncement = createAsyncThunk(
   'announcements/create',
   async (payload: Announcement) => {
     const res = await apiPost<ISuccessResponse<Announcement>>('/announcements', payload);
-    return res.data; // unwrap created announcement
+    return res.data; 
   }
 );
 
@@ -42,7 +41,7 @@ export const updateAnnouncement = createAsyncThunk(
   'announcements/update',
   async (payload: Announcement & { id: string }) => {
     const res = await apiPut<ISuccessResponse<Announcement>>(`/announcements/${payload.id}`, payload);
-    return res.data; // unwrap updated announcement
+    return res.data; 
   }
 );
 
@@ -50,11 +49,10 @@ export const deleteAnnouncement = createAsyncThunk(
   'announcements/delete',
   async (id: string) => {
     await apiDelete(`/announcements/${id}`);
-    return id; // return id to remove from state
+    return id;
   }
 );
 
-// -------------------- Slice --------------------
 const slice = createSlice({
   name: 'announcements',
   initialState,

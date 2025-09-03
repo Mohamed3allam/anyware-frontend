@@ -11,7 +11,6 @@ type Props = {
 export default function SidebarItem({ to, label, icon }: Props) {
   const location = useLocation();
 
-  // active detection, supports hash links
   const isActive = (() => {
     const [path, hash] = to.split('#');
     return location.pathname === path && location.hash === (hash ? `#${hash}` : '');

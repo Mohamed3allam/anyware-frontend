@@ -6,7 +6,7 @@ const staticUsers = [
   {
     name: 'Mr. Ahmed Mostafa',
     course: 'Math 101',
-    avatar: '/avatars/ahmed.png', // you can put your static images in public/avatars
+    avatar: '/avatars/ahmed.png',
   },
   {
     name: 'Mrs. Salma Ahmed',
@@ -45,7 +45,7 @@ export default function AnnouncementsList() {
 
       <List>
         {list.map((a, index) => {
-          const user = staticUsers[index % staticUsers.length]; // rotate through static users
+          const user = staticUsers[index % staticUsers.length];
           return (
             <React.Fragment key={a._id ?? a.title}>
               <ListItem alignItems="flex-start">

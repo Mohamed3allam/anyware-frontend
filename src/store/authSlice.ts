@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { apiGet, apiPost } from '../api/apiClient';
 import { setToken } from '../api/apiClient';
-import { useLocation, useNavigate } from 'react-router-dom';
 
 export type User = {
     _id?: string,
@@ -31,12 +30,6 @@ const initialState: AuthState = {
   error: null,
   initialized: false,
 };
-
-/** Endpoints:
- * POST /auth/login { email, password } -> { token, user }
- * POST /auth/signup { name, email, password } -> { token, user }
- * GET  /auth/getCurrentAdmin -> { user }
- */
 
 export const loginUser = createAsyncThunk(
   'auth/login',
@@ -89,14 +82,13 @@ const slice = createSlice({
       state.user = null;
       state.status = 'idle';
       state.error = null;
-      state.initialized = true; // we're done, just unauthenticated
+      state.initialized = true; 
     },
     setUser(state, action: PayloadAction<User>) {
       state.user = action.payload;
       state.loggedIn = true;
       state.initialized = true;
     },
-    // ✅ allows bootstrappers to mark auth as checked when no token
     markInitialized(state) {
       state.initialized = true;
     }
@@ -140,7 +132,7 @@ const slice = createSlice({
       })
       .addCase(fetchCurrentUser.rejected, state => {
         state.status = 'failed';
-        state.initialized = true; // even if invalid token
+        state.initialized = true;
       });
   }
 });

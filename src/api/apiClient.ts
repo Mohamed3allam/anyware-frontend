@@ -20,7 +20,6 @@ async function handleRes(res: Response) {
   const data = contentType.includes('application/json') && text ? JSON.parse(text) : text;
 
   if (!res.ok) {
-    // Try to surface message from response body if available
     const message =
       (data && typeof data === 'object' && (data.message || data.error)) ||
       (typeof data === 'string' && data) ||
@@ -41,7 +40,7 @@ export function apiGet<T>(path: string): Promise<T> {
 export function apiUpload<T>(path: string, formData: FormData): Promise<T> {
   return fetch(`${API_BASE}${path}`, {
     method: 'POST',
-    body: formData // don't stringify, no headers!
+    body: formData 
   }).then(handleRes);
 }
 

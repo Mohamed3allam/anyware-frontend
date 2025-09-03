@@ -30,7 +30,6 @@ export default function Header({ onMobileMenuOpen }: Props) {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  // State for menu
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -61,10 +60,8 @@ export default function Header({ onMobileMenuOpen }: Props) {
           py: { xs: 1, md: 0 }
         }}
       >
-        {/* Top row: menu button (mobile) + welcome (hidden on mobile) + icons */}
         <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 2 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            {/* Mobile menu button */}
             <IconButton
               color="inherit"
               aria-label="open drawer"
@@ -75,15 +72,12 @@ export default function Header({ onMobileMenuOpen }: Props) {
               <MenuIcon />
             </IconButton>
 
-            {/* Welcome text: hidden on xs/sm */}
             <Typography variant="h6" sx={{ fontWeight: 600, display: { xs: 'none', md: 'block' } }}>
               Welcome {name},
             </Typography>
           </Box>
 
-          {/* Icons group (always visible) */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            {/* Inline search for md+ */}
             <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', bgcolor: 'grey.100', px: 1, borderRadius: 2 }}>
               <SearchIcon />
               <InputBase placeholder="Search…" sx={{ ml: 1 }} />
@@ -101,7 +95,6 @@ export default function Header({ onMobileMenuOpen }: Props) {
               </Badge>
             </IconButton>
 
-            {/* Avatar with menu */}
             <IconButton onClick={handleMenuOpen}>
               <Avatar alt={name} src="" />
             </IconButton>
@@ -118,7 +111,6 @@ export default function Header({ onMobileMenuOpen }: Props) {
           </Box>
         </Box>
 
-        {/* Mobile search: shown under icons on xs/sm */}
         <Box sx={{ width: '100%', display: { xs: 'block', md: 'none' } }}>
           <Paper elevation={0} sx={{ display: 'flex', alignItems: 'center', gap: 1, px: 1, py: 0.5, bgcolor: 'grey.100', borderRadius: 2 }}>
             <SearchIcon />

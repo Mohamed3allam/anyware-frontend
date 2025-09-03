@@ -11,7 +11,6 @@ export default function RequireAuthRoute() {
   const location = useLocation();
   const bootstrapped = useRef(false);
 
-  // 🔁 Bootstrap exactly once per app load
   useEffect(() => {
     if (bootstrapped.current) return;
 
@@ -20,7 +19,6 @@ export default function RequireAuthRoute() {
       setToken(token);
       dispatch(fetchCurrentUser());
     } else {
-      // mark initialized if no token
       dispatch(markInitialized());
     }
 

@@ -47,7 +47,6 @@ function SidebarContent() {
 export default function Sidebar({ mobileOpen, onMobileClose }: Props) {
   return (
     <>
-      {/* Permanent drawer for md+ */}
       <Box
         sx={{
           width: drawerWidth,
@@ -65,7 +64,6 @@ export default function Sidebar({ mobileOpen, onMobileClose }: Props) {
         <SidebarContent />
       </Box>
 
-      {/* Temporary drawer for mobile */}
       <Drawer
         anchor="left"
         open={mobileOpen}

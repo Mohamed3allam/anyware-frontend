@@ -84,7 +84,6 @@ export default function QuizFormDialog({ open, onClose, onSubmit, initial }: Qui
             />
           </Grid>
 
-          {/* Due Date */}
           <Grid size={{xs:12, md:6}}>
             <Controller
               name="dueDate"
@@ -131,14 +130,12 @@ export default function QuizFormDialog({ open, onClose, onSubmit, initial }: Qui
               </IconButton>
             </AccordionSummary>
             <AccordionDetails>
-              {/* Question Text */}
               <Controller
                 name={`questions.${index}.questionText` as const}
                 control={control}
                 render={({ field }) => <TextField {...field} label="Question Text" fullWidth margin="dense" />}
               />
 
-              {/* Options */}
               <Controller
                 name={`questions.${index}.options.0` as const}
                 control={control}
@@ -160,7 +157,6 @@ export default function QuizFormDialog({ open, onClose, onSubmit, initial }: Qui
                 render={({ field }) => <TextField {...field} label="Option 4" fullWidth margin="dense" />}
               />
 
-              {/* Correct Answer Index */}
               <Controller
                 name={`questions.${index}.correctAnswerIndex` as const}
                 control={control}

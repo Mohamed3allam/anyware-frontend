@@ -10,7 +10,6 @@ import I18nProvider from './i18n/intl';
 import AppRoutes from './routes';
 import { fetchCurrentUser } from './store/authSlice';
 
-/** Minimal Error Boundary */
 class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean }> {
   constructor(props: any) {
     super(props);
@@ -20,8 +19,6 @@ class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { has
     return { hasError: true };
   }
   componentDidCatch(error: any, info: any) {
-    // TODO: send to monitoring
-    // console.error('Uncaught error:', error, info);
   }
   render() {
     if (this.state.hasError) {
@@ -36,20 +33,14 @@ class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { has
   }
 }
 
-/** AppInitializer handles boot-time tasks (e.g. fetch current user if token present) */
 function AppInitializer({ children }: { children: React.ReactNode }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // If you implement token persistence (localStorage), this will try to hydrate the current user.
-    // Make sure your apiClient sends the token in Authorization header if you persist it.
     const token = localStorage.getItem('token');
     if (token) {
-      // You might also set apiClient auth header here (optional)
-      // apiClient.setToken(token);
       dispatch(fetchCurrentUser() as any);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return <>{children}</>;

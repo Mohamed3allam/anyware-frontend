@@ -49,7 +49,7 @@ export default function DueList() {
             ? `${isOverdue ? 'Overdue' : 'Due'}: ${due.toLocaleString()}`
             : 'No due date';
 
-          const isQuiz = true; // Assuming all items are quizzes for now; could add a type field later
+          const isQuiz = true;
 
           return (
             <Paper
